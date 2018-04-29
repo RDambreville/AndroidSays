@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<SeekBar
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_below="@+id/difficultyText"
+        android:layout_alignLeft="@+id/difficultyText"
+        android:layout_alignStart="@+id/difficultyText"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />-->
+
+    <!--android:layout_alignLeft="@+id/seekBar"
+        android:layout_alignStart="@+id/seekBar" -->
+
+    <!--android:layout_alignRight="@+id/seekBar"
+        android:layout_alignEnd="@+id/seekBar"-->
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
+        android:layout_alignTop="@+id/difficultyText"
+        android:layout_alignLeft="@+id/difficultyText"
+        android:layout_alignStart="@+id/difficultyText">
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/linearLayout"
+            android:layout_alignLeft="@+id/linearLayout"
+            android:layout_alignStart="@+id/linearLayout"
+            android:layout_marginTop="26dp"
+            android:id="@+id/diffRadioGroup">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Novice"
+                android:id="@+id/noviceButton"
+                android:layout_marginRight="10dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Intermediate"
+                android:id="@+id/intermediateButton"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expert"
+                android:id="@+id/expertButton"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+        </RadioGroup>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/settingsDifficultyText_text"
+        android:id="@+id/difficultyText"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/settingsSoundsText_text"
+        android:id="@+id/soundsText"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignLeft="@+id/linearLayout"
+        android:layout_alignStart="@+id/linearLayout"
+        android:layout_marginTop="44dp" />
+
+    <!--<Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settingsSoundsOnButton_text"
+        android:id="@+id/onButton"
+        android:layout_below="@+id/soundsText"
+        android:layout_alignLeft="@+id/soundsText"
+        android:layout_alignStart="@+id/soundsText"
+        android:onClick="onSoundsOnButtonClicked" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settingsSoundsOffButton_text"
+        android:id="@+id/offButton"
+        android:layout_alignTop="@+id/onButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="24dp"
+        android:layout_marginEnd="24dp"
+        android:onClick="onSoundsOffButtonClicked" />-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Score"
+        android:id="@+id/scoreText"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/soundsRadioGroup"
+        android:layout_alignStart="@+id/soundsRadioGroup" />
+        <!--android:layout_below="@+id/onButton"
+        android:layout_alignLeft="@+id/onButton"
+        android:layout_alignStart="@+id/onButton"
+        android:layout_marginTop="49dp" -->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settingsResetHighScoreButtonText_text"
+        android:id="@+id/resetHighScoreButton"
+        android:onClick="onResetButtonClick"
+        android:layout_below="@+id/scoreText"
+        android:layout_alignLeft="@+id/scoreText"
+        android:layout_alignStart="@+id/scoreText" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="66dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout2">
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/soundsText"
+        android:layout_alignLeft="@+id/soundsText"
+        android:layout_alignStart="@+id/soundsText"
+        android:orientation="horizontal"
+        android:id="@+id/soundsRadioGroup">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settingsSoundsOnButtonText_text"
+            android:id="@+id/soundsOnButton"
+            android:layout_marginRight="125dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settingsSoundsOffButtonText_text"
+            android:id="@+id/soundsOffButton" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/settingsScoreHighScoreText_text"
+        android:id="@+id/highScoreText"
+        android:layout_alignTop="@+id/resetHighScoreButton"
+        android:layout_alignRight="@+id/soundsRadioGroup"
+        android:layout_alignEnd="@+id/soundsRadioGroup" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settingsBackButton_text"
+        android:id="@+id/backButton"
+        android:onClick="onBackClicked"
+        android:layout_alignTop="@+id/linearLayout2"
+        android:layout_toRightOf="@+id/scoreText"
+        android:layout_toEndOf="@+id/scoreText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settingsStartButton_text"
+        android:id="@+id/startButton"
+        android:onClick="onStartClicked"
+        android:layout_alignTop="@+id/backButton"
+        android:layout_alignRight="@+id/highScoreText"
+        android:layout_alignEnd="@+id/highScoreText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Vibrations"
+        android:id="@+id/vibrationsText"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/resetHighScoreButton"
+        android:layout_alignLeft="@+id/resetHighScoreButton"
+        android:layout_alignStart="@+id/resetHighScoreButton" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vibrationsText"
+        android:layout_alignLeft="@+id/vibrationsText"
+        android:layout_alignStart="@+id/vibrationsText"
+        android:orientation="horizontal"
+        android:id="@+id/vibrationsRadioGroup">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="On"
+            android:id="@+id/vibrationsOnButton"
+            android:layout_marginRight="125dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Off"
+            android:id="@+id/vibrationsOffButton" />
+    </RadioGroup>
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/soundsSeekBar"
+        android:layout_below="@+id/soundsRadioGroup"
+        android:layout_alignLeft="@+id/soundsRadioGroup"
+        android:layout_alignStart="@+id/soundsRadioGroup" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume: 0"
+        android:id="@+id/soundsIndicatorText"
+        android:layout_below="@+id/soundsSeekBar"
+        android:layout_alignLeft="@+id/soundsSeekBar"
+        android:layout_alignStart="@+id/soundsSeekBar" />
+
+    <!--<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/difficultyNum"
+        android:text="@string/settingsDifficultyNum_num"/>
+        android:layout_below="@+id/seekBar"
+        android:layout_alignLeft="@+id/seekBar"
+        android:layout_alignStart="@+id/seekBar" -->
+
+
+</RelativeLayout>

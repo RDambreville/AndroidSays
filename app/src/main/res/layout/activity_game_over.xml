@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameOverEndGameMessageText_text"
+        android:id="@+id/endGameMessage"
+        android:layout_marginTop="68dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/buttonVertLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="38dp">
+
+        <Button
+            android:id="@+id/retryButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:onClick="onRetryButtonClicked"
+            android:text="@string/gameOverRetryButtonText_text"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/quitButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:onClick="onQuitButtonClicked"
+            android:text="@string/gameOverQuitButtonText_text" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewVertLinearLayout"
+        android:layout_below="@+id/endGameMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/gameOverScoreText_text"
+            android:id="@+id/gameOverScore"
+            android:padding="10dp" />
+
+        <!--<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/gameOverLongestStreakText_text"
+            android:id="@+id/longestStreak"
+            android:padding="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/gameOverLevelText_text"
+            android:id="@+id/level"
+            android:padding="10dp" />-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttonVertLayout"
+        android:layout_below="@+id/textViewVertLinearLayout"
+        android:weightSum="1"
+        android:id="@+id/linearLayout3">
+
+        <ListView
+            android:layout_width="180dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/correctList"
+            android:layout_below="@+id/textViewVertLinearLayout"
+            android:layout_above="@+id/buttonVertLayout"
+            android:layout_toLeftOf="@+id/textViewVertLinearLayout"
+            android:layout_marginRight="10dp" />
+
+        <ListView
+            android:layout_width="190dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/performedList"
+            android:layout_alignTop="@+id/linearLayout3"
+            android:layout_toRightOf="@+id/correctList"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

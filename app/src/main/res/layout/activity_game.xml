@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="dambrero.androidsays.MainActivity"
+    android:id="@+id/gameRelativeLayout"
+    android:focusable="false">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gamePromptText_text"
+        android:id="@+id/prompt"
+        android:layout_marginTop="124dp"
+        android:layout_below="@+id/scoreText"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="@string/gameQuitButton_text"
+        android:id="@+id/quitButton"
+        android:onClick="forceQuitGame"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp" />
+
+    <!--ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameScore_text"
+        android:id="@+id/scoreText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/score" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameStrikes_text"
+        android:id="@+id/strikeText"
+        android:layout_above="@+id/prompt"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/strikes" />
+
+        <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameStreakText_text"
+        android:id="@+id/streakText"
+        android:layout_above="@+id/streakCount"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/streak" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/promptImageView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ready" />-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameScore_text"
+        android:id="@+id/scoreText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+   <!-- <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameStrikes_text"
+        android:id="@+id/strikeText"
+        android:layout_above="@+id/prompt"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameScoreCount_num"
+        android:id="@+id/scoreCount"
+        android:layout_below="@+id/scoreText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/greenImageView"
+        android:src="@drawable/green"
+        android:layout_alignBottom="@+id/prompt"
+        android:layout_below="@+id/scoreCount"
+        android:layout_toLeftOf="@+id/quitButton"
+        android:layout_toStartOf="@+id/quitButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/redImageView"
+        android:src="@drawable/red"
+        android:layout_alignTop="@+id/greenImageView"
+        android:layout_alignBottom="@+id/greenImageView"
+        android:layout_toRightOf="@+id/quitButton"
+        android:layout_toEndOf="@+id/quitButton"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/yellowImageView"
+        android:src="@drawable/yellow"
+        android:layout_alignRight="@+id/greenImageView"
+        android:layout_alignEnd="@+id/greenImageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible" />
+
+    <!-- <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textAppearance="?android:attr/textAppearanceLarge"
+         android:text="@string/gameStrikesCount_num"
+         android:id="@+id/strikeCount"
+         android:layout_alignBottom="@+id/scoreCount"
+         android:layout_alignParentRight="true"
+         android:layout_alignParentEnd="true" />-->
+
+    <!--<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gameExitTimerText_text"
+        android:id="@+id/exitTimer"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+-->
+    <!--TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/gameStreakText_text"
+        android:id="@+id/streakText"
+        android:layout_below="@+id/prompt"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />-->
+
+    <!--TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/streakCount"
+        android:text="@string/gameStreakCountText_text"
+        android:layout_below="@+id/streakText"
+        android:layout_alignRight="@+id/streakText"
+        android:layout_alignEnd="@+id/streakText"
+        android:layout_alignParentLeft="true" />-->
+
+    <!--<ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exitingProgressBar"
+        android:layout_alignBottom="@+id/exitTimer"
+        android:layout_toRightOf="@+id/quitButton"
+        android:layout_toEndOf="@+id/quitButton" />-->
+
+</RelativeLayout>

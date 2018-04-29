@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">AndroidSays</string>
+    <string name="mainTitleText_text">Android Says!</string>
+    <string name="mainStartButton_text">START</string>
+    <string name="mainInstructionsButton_text">INSTRUCTIONS</string>
+    <string name="mainSettingsButton_text">SETTINGS</string>
+    <string name="mainHighScoreText_text">Best:</string>
+    <string name="mainDifficultyText_text">Level</string>
+    <string name="mainSoundsText_text">Sounds:</string>
+
+    <string name="gameLabelText_text">Game</string>
+    <string name="gamePromptText_text"></string>
+    <string name="gameScore_text">Score</string>
+    <string name="gameStrikes_text">Strikes</string>
+    <string name="gameScoreCount_num"></string>
+    <string name="gameStrikesCount_num"></string>
+    <string name="gameStreakText_text">Streak</string>
+    <string name="gameStreakCountText_text"></string>
+    <string name="gameQuitButton_text">QUIT</string>
+    <string name="gameExitTimerText_text"></string>
+
+    <string name="gameOverLabelText_text">Game Over</string>
+    <string name="gameOverEndGameMessageText_text"></string>
+    <string name="gameOverScoreText_text"></string>
+    <string name="gameOverLongestStreakText_text"></string>
+    <string name="gameOverLevelText_text"></string>
+    <string name="gameOverRetryButtonText_text">RETRY</string>
+    <string name="gameOverQuitButtonText_text">QUIT</string>
+
+    <string name="instructionsLabelText_text">Instructions</string>
+    <string name="instructionsHeaderText_text">Instructions</string>
+    <string name="instructionsPara_text">Perform the indicated gesture on the screen. 1 point is awarded for performing the gesture
+        correctly. 1 strike is awarded for performing the gesture incorrectly or for not completing the gesture in time.
+        3 strikes and it\'s game over! \n Feel free to change the difficulty settings on the Settings page at any time!</string>
+    <string name="instructionsBackButton_text">BACK</string>
+    <string name="instructionsStartButton">START</string>
+
+    <string name="settingsLabelText_text">Settings</string>
+    <string name="settingsDifficultyText_text">Difficulty</string>
+    <string name="settingsSoundsText_text">Sounds</string>
+    <string name="settingsSoundsOnButton_text">ON</string>
+    <string name="settingsSoundsOffButton_text">OFF</string>
+    <string name="settingsStartButton_text">START</string>
+    <string name="settingsBackButton_text">BACK</string>
+    <string name="settingsDifficultyNum_num">0</string>
+    <string name="settingsResetHighScoreButtonText_text">RESET</string>
+    <string name="settingsSoundsOnButtonText_text">On</string>
+    <string name="settingsSoundsOffButtonText_text">Off</string>
+    <string name="settingsScoreHighScoreText_text">Best:</string>
+
+
+    <string name="page1">Welcome to Android Says, the classic Simon game reimagined
+                    for the smart phone! The rules are the same: follow the
+                    commands on the screen in the right order. One wrong move and it\'s game over!</string>
+    <string name="page2">There are 4 different commands to expect: Single Tap, DoubleTap, Long Press, and Fling.
+                    You can practice performing each gesture in the next slide.</string>
+
+</resources>
