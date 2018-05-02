@@ -454,7 +454,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                     repeatMultInt++;
                     repeatMultString.delete(0, repeatMultString.length());
                     repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("x" + repeatMultInt));
+                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
                 }
                 else{
                     repeatMultInt = 1;
@@ -490,7 +490,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                     repeatMultInt++;
                     repeatMultString.delete(0, repeatMultString.length());
                     repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("x" + repeatMultInt));
+                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
                 }
                 else{
                     repeatMultInt = 1;
@@ -569,7 +569,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                     repeatMultInt++;
                     repeatMultString.delete(0, repeatMultString.length());
                     repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("x" + repeatMultInt));
+                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
                 }
                 else{
                     repeatMultInt = 1;
@@ -604,7 +604,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                     repeatMultInt++;
                     repeatMultString.delete(0, repeatMultString.length());
                     repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("x" + repeatMultInt));
+                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
                 }
                 else{
                     repeatMultInt = 1;
@@ -1031,7 +1031,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         else{ // If the current gesture is a repeat of the last one
             //repeatMultInt += 1;
             //prompt.setText(demandedGestureList.get(index) + " " + repeatMultString); // print the gesture with a multiplier indicator
-            prompt.setText(demandedGestureList.get(index) + " " + repeatMultString.append("x" + repeatMultInt));
+            prompt.setText(demandedGestureList.get(index) + " " + repeatMultString.append("(" + repeatMultInt + ")"));
         }
 
 
