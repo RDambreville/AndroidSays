@@ -40,34 +40,24 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     private TextView prompt;
     private TextView scoreCount;
-    private TextView strikeCount;
-    private TextView streakCount;
     private TextView scoreText;
-    private TextView strikeText;
-    private TextView streakText;
-    private TextView exitTimer;
     private RelativeLayout gameRelativeLayout;
-    //private ProgressBar exitingProgressBar;
     private GestureDetectorCompat gestureDetector;
     private Vibrator vibrator;
 
     MediaPlayer mediaPlayer1; // media player for right answer sound effect
     MediaPlayer mediaPlayer2; // medial player for wrong answer sound effect
 
-    String gestureName;
     String performedGestureName;
     String demandedGestureName;
     int demGestIndex = 0;
     int id; // auxiliary ID returned by demandGesture()
     int id1; //Demanded Gesture ID
     int id2; // Performed Gesture ID
-    int prevID = 0; // previous gesture ID for checking repeats ---> initialized to zero because when game starts,
-    // there is no previous gesture
     int repeatMultInt = 1;
     int strikes = 0; // demerits
     int score = 0; //score
     int streak = 0; //streak count
-    //int streakArray[] = new int[3]; // int array to store streak counts ---> only 3 indices b/c game over after 3 strikes
     int longestStreak;//Longest streak at game over
     int transScore = 0;// score sent to GameOver activity
     int diffNum = 0;
@@ -75,18 +65,14 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     long speed = 2000;
 
     int roundTime = 0;
-    int roundNum = 1;
-    int touches = 0;
     int currentIndex = 0;
     int nextIndex = 0;
-    //int roundProgress = 1;
     String difficulty;
     String currentBGColor = "";
     String prevBGColor = "";
     //String objects are immutable!! Use StringBuffer objects instead if you want to change strings on the fly
     //String repeatMultString =("x" + repeatMultInt); // multiplier string label for repeated gesture (i.e. Single Tap! x2)
-    StringBuffer repeatMultString = new StringBuffer();
-    String nextStringToPrint;
+    StringBuilder repeatMultString = new StringBuilder();
     boolean gameStarted = false;
     boolean soundsOn;
     boolean quitButtonPressed = false; // arbitrary boolean variable to pair with forceQuitGame() method
@@ -95,9 +81,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     long winVibLength = 50;
     long loseVibLength = 50;
     long repeat[] = new long[2];
-
-    //int demandedGestures[] = new int[3];
-    //int performedGestures[] = new int[3];
 
     ArrayList<String> demandedGestureList = new ArrayList<String>();
     ArrayList<String> performedGestureList = new ArrayList<String>();
@@ -126,14 +109,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
             Log.i(TAG, "Checking if user gesture matches demanded gesture");
             SharedPreferences sharedPref = getSharedPreferences("userData", Context.MODE_PRIVATE);
 
-            //roundProgress = 1; // reset round progress to 1
 
-            //if(performedGestures[0] == demandedGestures[0] && performedGestures[1] == demandedGestures[1] && performedGestures[2] == demandedGestures[2] && strikes < 1 ){
-            //if(performedGestures.equals(demandedGestures) && strikes < 3){
-            /*if(performedGestureList.size() > 1) { // For some reason, first gesture gets stored twice so delete the extra copy then trim the list
-                performedGestureList.remove(0);
-                performedGestureList.trimToSize();
-            }*/
             if (performedGestureList.equals(demandedGestureList)){
                 if(quitButtonPressed){
                     return;
@@ -141,7 +117,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                 else{
                     score++;
                     streak++;
-                    roundNum++;
                     //speed -= 100;
                     //resetColorScheme();
                     prompt.setText("Right!");
@@ -153,13 +128,11 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                         //do nothing
                     }
 
-                    //streakCount.setText("" + streak);
                     scoreCount.setText("" + score);
                     //roundTime = 0;
                     //demGestIndex = 0;
                     currentIndex =0;
                     nextIndex = 0;
-                    //touches = 0;
                     gameStarted = false;
                     //demandedGestureList.removeAll(demandedGestureList);
                     performedGestureList.removeAll(performedGestureList);
@@ -195,8 +168,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                         return; // same as above
                     }
                     else { // otherwise initiate penalty logic
-                        //strikes++;
-                        //resetColorScheme();
                         prompt.setText("Wrong!");
                         if(sharedPref.getBoolean("soundsOn", soundsOn)) {
                             mediaPlayer2.start(); // play wrong answer sound effect
@@ -204,17 +175,8 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                         else{
                             //do nothing
                         }
-                        // prompt.setText("Wrong gesture!");
-                        //strikeCount.setText("" + strikes);
-                        //Log.i(TAG, "strikes = " + strikes); ----> debugging log message
-                        //prevID = id1; //store current demanded gesture id in repeatID to check for repeated gestures later
-                        //streakArray[strikes - 1] = streak; // store streak count at the next index in streakArray
                        longestStreak = streak;
                         streak = 0; // reset streak count
-                        //streakCount.setText("0");
-                        //roundTime = 0;
-                        //demGestIndex = 0;
-                        //touches = 0;
                         //vibrator.vibrate(loseVibLength);
                         gameStarted = false;
                         //demandedGestureList.removeAll(demandedGestureList);
@@ -289,22 +251,15 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     Handler handler8 = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (demandedGestureList.size() == 1 || nextIndex + 1 > demandedGestureList.size()) {
+            if (demandedGestureList.size() == 1 || nextIndex + 1 > demandedGestureList.size()) { // If it is only the first round or if we've reached the end of the demanded gesture list
                 roundCheck();
-            } else if (demandedGestureList.size() > 1 && nextIndex < demandedGestureList.size()) {
-                if (demandedGestureList.get(nextIndex) == demandedGestureList.get(nextIndex - 1) /*&& repeatMultInt > 1*/) {
-                    repeatMultInt++;
-                    repeatMultString.delete(0, (repeatMultString.length())); // clear the repeat indicator string so that it can be appended later
-                    repeatMultString.trimToSize();
-                    //++repeatMultInt;
+            } else if (demandedGestureList.size() > 1 && nextIndex < demandedGestureList.size()) { // If it is after the first round and there are more gestures in the gesture list
+                if (demandedGestureList.get(nextIndex) == demandedGestureList.get(nextIndex - 1)) { // If the next demanded gesture is the same as the one before it
+                    repeatMultInt++; // increment the repeat indicator because a repeat gesture has been found
+                    clearPrintedRepeatIndicator(); // remove the current repeat indicator from the prompt because it is about to change
                     printDemandedGestureList(nextIndex);
-                    //prompt.setText(demandedGestureList.get(nextIndex) + repeatMultString);
-                    //nextStringToPrint = demandedGestureList.get(nextIndex) + " " + repeatMultString;
-                    //prompt.setText(demandedGestureList.get(index) + " " + repeatMultString);
-                } else {
-                    repeatMultInt = 1;
-                    repeatMultString.delete(0, (repeatMultString.length())); // clear the repeat indicator string so that it can be appended later
-                    repeatMultString.trimToSize();
+                } else { // if the next demanded gesture is not the same as the one before it
+                    resetRepeatIndicator(); // reset and remove the repeat indicator because the repeat streak has just been broken
                     printDemandedGestureList(nextIndex);
                 }
             }
@@ -376,19 +331,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         scoreCount = (TextView) findViewById(R.id.scoreCount);
         scoreText = (TextView) findViewById(R.id.scoreText);
 
-       /* strikeCount = (TextView) findViewById(R.id.strikeCount);
-        streakCount = (TextView) findViewById(R.id.streakCount);
-        strikeText = (TextView) findViewById(R.id.strikeText);
-        streakText = (TextView) findViewById(R.id.streakText);*/
-
         scoreCount.setText("" + 0);
-        /*strikeCount.setText("" + 0);
-        streakCount.setText("" + 0);*/
-        //exitingProgressBar = (ProgressBar) findViewById(R.id.exitingProgressBar);
-        //exitTimer = (TextView) findViewById(R.id.exitTimer);
-        //this.gestureDetector = new GestureDetectorCompat(this, this);
-        //gestureDetector.setOnDoubleTapListener(this);
-
 
         Log.i(TAG, "score = " + score);
         Log.i(TAG, "strikes = " + strikes);
@@ -442,11 +385,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     public boolean onDoubleTap(MotionEvent motionEvent) {
-        //prompt.setText("Double Tap Achieved!");
-        //gestureName = "Double Tap";
-        if(gameStarted == true  /*&& touches < performedGestureList.size()*/ /*&& roundProgress == 3*/){// activate gesture response if game is started and round has finished making progress
-            //id2 = 1;
-            //touches++;
+        if(gameStarted == true){// activate gesture response if game is started
             performedGestureName = "Double Tap!";
             storeUserGesture();
             if (performedGestureList.size() > 1 && nextIndex < performedGestureList.size()){
@@ -467,7 +406,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
             nextIndex++;
             //changeColorScheme();
             Log.i(TAG, "Double Tap");
-            //Log.i(TAG, "id2 = " + id2 + "\n");
             return true;
         }
         else{
@@ -478,11 +416,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        //prompt.setText("Single Tap Achieved!");
-        //gestureName = "Single Tap";
-        if(gameStarted == true  /*&& touches < performedGestureList.size()*/ /*&& roundProgress == 3*/){// activate gesture response if game is started and round has finished making progress
-            //id2 = 2;
-            //touches++;
+        if(gameStarted == true){// activate gesture response if game is started
             performedGestureName = "Single Tap!";
             storeUserGesture();
             if (performedGestureList.size() > 1 && nextIndex < performedGestureList.size()){
@@ -503,7 +437,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
             nextIndex++;
             //changeColorScheme();
             Log.i(TAG, "SingleTapConfirmed");
-            //Log.i(TAG, "id2 = " + id2 + "\n");
             return true;
         }
         else{
@@ -532,19 +465,14 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         return false;
     }
 
+    //Ignore Scroll events. They're too sensitive and difficult to implement
     @Override
     public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        //prompt.setText("Scroll Achieved!");
-        //gestureName = "Scroll";
-        if(gameStarted == true  /*&& touches < performedGestureList.size()*/ /*&& roundProgress == 3*/){ // activate gesture response if game is started and round has finished making progress
-            /*id2 = 3;
-            touches++;
+        if(gameStarted == true){ // activate gesture response if game is started
             storeUserGesture();
             prompt.setText("Scroll");
             changeColorScheme();
             Log.i(TAG, "Scroll");
-            //Log.i(TAG, "id2 = " + id2 + "\n");
-            */
             return true;
         }
         else{
@@ -673,36 +601,8 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         prompt.setText("Game over!");
         Toast.makeText(GameActivity.this,"Thanks for playing!", Toast.LENGTH_SHORT).show();
         transScore += score; // put current score in transScore, which will be sent to the GameOver activity
-        /*String[] gameOverList = new String[performedGestureList.size()]; // create a String array to store correct gestures so player can see mistake
-        for(int i = 0; i < gameOverList.length; i++){
-            gameOverList[i] = performedGestureList.get(i);
-        }*/
-
-                // Already handled the streak in roundCheck() method
-        //longestStreak = streak;
-
-        //int i = 0;
-        /*if(streakArray[i] >= streakArray[i+1] && streakArray[i] >= streakArray[i+2]){
-            longestStreak = streakArray[i];
-        }
-        else
-        if(streakArray[i+1] >= streakArray[i] && streakArray[i+1] >= streakArray[i+2]){
-            longestStreak = streakArray[i+1];
-        }
-        else
-        if(streakArray[i+2] >= streakArray[i] && streakArray[i+2] >= streakArray[i+1]){
-            longestStreak = streakArray[i+2];
-        }*/
-
         score = 0;
         strikes = 0;
-
-        //TODO implement spinning progress bar instead of exiting text
-        //exitTimer.setText("Exiting...");
-
-        //scoreCount.setText("0");
-        //strikeCount.setText("0");
-
     }
 
 
@@ -725,8 +625,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         Toast.makeText(GameActivity.this, "Thanks for playing!", Toast.LENGTH_SHORT).show();
         score = 0;
         strikes = 0;
-        // scoreCount.setText("0");
-        //strikeCount.setText("0");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -734,10 +632,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     //Randomly demand gesture to be performed by player and check if demanded gesture is a repeat
     public int demandGesture() { // app demands random gesture to be performed by user
-        //Random random = new Random(System.currentTimeMillis());
-
-        // int randNum = (random.nextInt() % 5 + 1); ------> wrong way to produce non-zero Random ------> produces 0/0 which is indeterminate, but java assumes its zero?\
-        //int randNum = (random.nextInt(4) + 1); // right way to produce non-zero Random -----> never produces zero
         int randNum = (random.nextInt(4) + 1);
 
         Log.i(TAG, "randNum = " + randNum);
@@ -850,47 +744,14 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
             gameOver();
         }
         else {
-            //id1 = demandGesture();
             populateDemandedGestureList();
-            /*if (demandedGestureList.size() > 1){
-                nextIndex = index + 1;
-            }*/
             printDemandedGestureList(nextIndex);
-            //printDemandedGestureList(currentIndex);
-
-            /*if (demandedGestureList.size() == 1) {
-                printDemandedGestureList(0);
-                //roundCheck();
-            } else if (demandedGestureList.size() > 1) {
-                printDemandedGestureList(currentIndex);
-            }*/
         }
-
-
-
-
-
-
     }
 
     // store user gestures in the order they are performed
     public void storeUserGesture(){
-        /*if(performedGestureList.get(index) == performedGestureList(index - 1)){
-
-        }*/
         performedGestureList.add(performedGestureName);
-
-
-        /*if(touches == 1 || touches == 0){
-            performedGestures[0] = id2;
-
-
-        }
-        else if (touches <= 3){
-            performedGestures[touches - 1] = id2;
-        }
-        else{}*/
-
     }
 
 
@@ -906,55 +767,35 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
                 gameRelativeLayout.setBackgroundColor(Color.RED);
                 prompt.setTextColor(Color.WHITE);
                 scoreCount.setTextColor(Color.WHITE);
-                strikeCount.setTextColor(Color.WHITE);
-                streakCount.setTextColor(Color.WHITE);
                 scoreText.setTextColor(Color.WHITE);
-                strikeText.setTextColor(Color.WHITE);
-                streakText.setTextColor(Color.WHITE);
                 break;
 
             case "Blue":
                 gameRelativeLayout.setBackgroundColor(Color.BLUE);
                 prompt.setTextColor(Color.WHITE);
                 scoreCount.setTextColor(Color.WHITE);
-                strikeCount.setTextColor(Color.WHITE);
-                streakCount.setTextColor(Color.WHITE);
                 scoreText.setTextColor(Color.WHITE);
-                strikeText.setTextColor(Color.WHITE);
-                streakText.setTextColor(Color.WHITE);
                 break;
 
             case "Green":
                 gameRelativeLayout.setBackgroundColor(Color.GREEN);
                 prompt.setTextColor(Color.BLACK);
                 scoreCount.setTextColor(Color.BLACK);
-                strikeCount.setTextColor(Color.BLACK);
-                streakCount.setTextColor(Color.BLACK);
                 scoreText.setTextColor(Color.BLACK);
-                strikeText.setTextColor(Color.BLACK);
-                streakText.setTextColor(Color.BLACK);
                 break;
 
             case "Yellow":
                 gameRelativeLayout.setBackgroundColor(Color.YELLOW);
                 prompt.setTextColor(Color.BLACK);
                 scoreCount.setTextColor(Color.BLACK);
-                strikeCount.setTextColor(Color.BLACK);
-                streakCount.setTextColor(Color.BLACK);
                 scoreText.setTextColor(Color.BLACK);
-                strikeText.setTextColor(Color.BLACK);
-                streakText.setTextColor(Color.BLACK);
                 break;
 
             case "Cyan":
                 gameRelativeLayout.setBackgroundColor(Color.CYAN);
                 prompt.setTextColor(Color.BLACK);
                 scoreCount.setTextColor(Color.BLACK);
-                strikeCount.setTextColor(Color.BLACK);
-                streakCount.setTextColor(Color.BLACK);
                 scoreText.setTextColor(Color.BLACK);
-                strikeText.setTextColor(Color.BLACK);
-                streakText.setTextColor(Color.BLACK);
                 break;
         }
 
@@ -991,11 +832,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         gameRelativeLayout.setBackgroundColor(Color.WHITE);
         prompt.setTextColor(Color.BLACK);
         scoreCount.setTextColor(Color.BLACK);
-        strikeCount.setTextColor(Color.BLACK);
-        streakCount.setTextColor(Color.BLACK);
         scoreText.setTextColor(Color.BLACK);
-        strikeText.setTextColor(Color.BLACK);
-        streakText.setTextColor(Color.BLACK);
     }
 
     public void checkForRepeatedBGColor() {
@@ -1005,38 +842,19 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         }
 
     public void populateDemandedGestureList() {
-        /*for (int i = 0; i < roundNum; i++) {
-            demandGesture();
-            demandedGestureList.add(demandedGestureName);
-
-        }*/
-
-        demandGesture();
-        demandedGestureList.add(demandedGestureName);
+        demandGesture(); //generate a gesture to be performed
+        demandedGestureList.add(demandedGestureName); // add the gesture name to the list of demanded gestures
     }
 
     public void printDemandedGestureList(int index) {
         //checkForRepeatedGestures();
-        //nextIndex = index + 1;
-       /* if (demandedGestureList.size() == 1) {
-            prompt.setText(demandedGestureList.get(index));
-        } else if (demandedGestureList.size() > 1) {
-            prompt.setText(demandedGestureList.get(index));
-            //nextIndex++;
-        }*/
-
         if (repeatMultInt == 1) { // If current gesture is not a repeat of the last one
-            prompt.setText(demandedGestureList.get(index)); //print the gesture without a multiplier indicator
+            prompt.setText(demandedGestureList.get(index)); // print the gesture without a multiplier indicator
         }
         else{ // If the current gesture is a repeat of the last one
-            //repeatMultInt += 1;
-            //prompt.setText(demandedGestureList.get(index) + " " + repeatMultString); // print the gesture with a multiplier indicator
-            prompt.setText(demandedGestureList.get(index) + " " + repeatMultString.append("(" + repeatMultInt + ")"));
+            prompt.setText(demandedGestureList.get(index) + " " + repeatMultString.append("(" + repeatMultInt + ")")); // print the gesture with a multiplier indicator
         }
 
-
-        //currentIndex = index + 1;
-        //nextIndex = index + 1;
         nextIndex++;
         Thread waitThread = new Thread() {
             @Override
@@ -1075,6 +893,21 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
             }
         };
         waitThread.start();*/
+    }
+
+
+    //Empty the repeat indicator string buffer so that it can modified and appended later,
+    //but preserve the value of the repeat integer because there are presumably more repeats to come.
+    public void clearPrintedRepeatIndicator(){
+        repeatMultString.delete(0, (repeatMultString.length())); // clear the repeat indicator string so that it can be appended later
+        repeatMultString.trimToSize(); // trim off the empty spaces in the buffer because they aren't being used
+    }
+
+    //Reset the repeat indicator and integer
+    public void resetRepeatIndicator(){
+        repeatMultInt = 1;// reset the repeat indicator because a unique gesture has been found and has just broken the repeat streak
+        clearPrintedRepeatIndicator();
+
     }
 
 }
