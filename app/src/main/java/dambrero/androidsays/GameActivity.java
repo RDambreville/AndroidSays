@@ -10,6 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -87,6 +91,11 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     Random random = new Random(System.currentTimeMillis());
 
+    Animation singleTapZoom;
+    Animation doubleTapZoom;
+    Animation longPressZoom;
+    Animation flingTranslate;
+
 
     //------------------------ Thread Handlers ---------------------------------------------------------------------
 
@@ -95,7 +104,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         @Override
         public void handleMessage(Message msg) {
             Log.i(TAG, "Starting gameLoop()...");
-           // gameLoop();// performs game loop change after 3 seconds
+            // gameLoop();// performs game loop change after 3 seconds
             newRoundStart();
         }
     };
@@ -164,45 +173,45 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
             }
             else{
 
-                    if(quitButtonPressed){// if player pressed quit button
-                        return; // same as above
+                if(quitButtonPressed){// if player pressed quit button
+                    return; // same as above
+                }
+                else { // otherwise initiate penalty logic
+                    prompt.setText("Wrong!");
+                    if(sharedPref.getBoolean("soundsOn", soundsOn)) {
+                        mediaPlayer2.start(); // play wrong answer sound effect
                     }
-                    else { // otherwise initiate penalty logic
-                        prompt.setText("Wrong!");
-                        if(sharedPref.getBoolean("soundsOn", soundsOn)) {
-                            mediaPlayer2.start(); // play wrong answer sound effect
-                        }
-                        else{
-                            //do nothing
-                        }
-                       longestStreak = streak;
-                        streak = 0; // reset streak count
-                        //vibrator.vibrate(loseVibLength);
-                        gameStarted = false;
-                        //demandedGestureList.removeAll(demandedGestureList);
-                        //performedGestureList.removeAll(performedGestureList);
-                        repeatMultInt = 1;
-                        repeatMultString.delete(0, repeatMultString.length());
-                        repeatMultString.trimToSize();
-                        Thread waitThread = new Thread() {
-                            @Override
-                            public void run() {
-                                long futureTime = System.currentTimeMillis() + 500;
-                                while (System.currentTimeMillis() < futureTime) {
-                                    synchronized (this) {
-                                        try {
-                                            wait(futureTime - System.currentTimeMillis());
-                                        } catch (Exception e) {
-                                        }
+                    else{
+                        //do nothing
+                    }
+                    longestStreak = streak;
+                    streak = 0; // reset streak count
+                    //vibrator.vibrate(loseVibLength);
+                    gameStarted = false;
+                    //demandedGestureList.removeAll(demandedGestureList);
+                    //performedGestureList.removeAll(performedGestureList);
+                    repeatMultInt = 1;
+                    repeatMultString.delete(0, repeatMultString.length());
+                    repeatMultString.trimToSize();
+                    Thread waitThread = new Thread() {
+                        @Override
+                        public void run() {
+                            long futureTime = System.currentTimeMillis() + 500;
+                            while (System.currentTimeMillis() < futureTime) {
+                                synchronized (this) {
+                                    try {
+                                        wait(futureTime - System.currentTimeMillis());
+                                    } catch (Exception e) {
                                     }
                                 }
-                                //handler2.sendEmptyMessage(0);
-                                //gameOver();
-                                handler9.sendEmptyMessage(0);
                             }
-                        };
-                        waitThread.start();
-                        //gameOver(); // initiate game over logic
+                            //handler2.sendEmptyMessage(0);
+                            //gameOver();
+                            handler9.sendEmptyMessage(0);
+                        }
+                    };
+                    waitThread.start();
+                    //gameOver(); // initiate game over logic
                 }
             }
         }
@@ -236,7 +245,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     Handler handler6 = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-           continueOrStop();
+            continueOrStop();
         }
     };
 
@@ -333,6 +342,8 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
         scoreCount.setText("" + 0);
 
+        loadAnimations();
+
         Log.i(TAG, "score = " + score);
         Log.i(TAG, "strikes = " + strikes);
         Log.i(TAG, "id1 = " + id1);
@@ -387,23 +398,8 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     public boolean onDoubleTap(MotionEvent motionEvent) {
         if(gameStarted == true){// activate gesture response if game is started
             performedGestureName = "Double Tap!";
-            storeUserGesture();
-            if (performedGestureList.size() > 1 && nextIndex < performedGestureList.size()){
-                if (performedGestureList.get(nextIndex) == performedGestureList.get(nextIndex - 1)){
-                    repeatMultInt++;
-                    repeatMultString.delete(0, repeatMultString.length());
-                    repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
-                }
-                else{
-                    repeatMultInt = 1;
-                    prompt.setText(performedGestureName);
-                }
-            }
-            else /*if (repeatMultInt == 1)*/ {
-                prompt.setText(performedGestureName);
-            }
-            nextIndex++;
+            performedGestureList.add(performedGestureName);
+            printPerformedGesture(performedGestureName);
             //changeColorScheme();
             Log.i(TAG, "Double Tap");
             return true;
@@ -418,23 +414,8 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
         if(gameStarted == true){// activate gesture response if game is started
             performedGestureName = "Single Tap!";
-            storeUserGesture();
-            if (performedGestureList.size() > 1 && nextIndex < performedGestureList.size()){
-                if (performedGestureList.get(nextIndex) == performedGestureList.get(nextIndex - 1)){
-                    repeatMultInt++;
-                    repeatMultString.delete(0, repeatMultString.length());
-                    repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
-                }
-                else{
-                    repeatMultInt = 1;
-                    prompt.setText(performedGestureName);
-                }
-            }
-            else /*if (repeatMultInt == 1)*/ {
-                prompt.setText(performedGestureName);
-            }
-            nextIndex++;
+            performedGestureList.add(performedGestureName);
+            printPerformedGesture(performedGestureName);
             //changeColorScheme();
             Log.i(TAG, "SingleTapConfirmed");
             return true;
@@ -469,10 +450,10 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
         if(gameStarted == true){ // activate gesture response if game is started
-            storeUserGesture();
+            /*storeUserGesture();
             prompt.setText("Scroll");
-            changeColorScheme();
-            Log.i(TAG, "Scroll");
+            //changeColorScheme();
+            Log.i(TAG, "Scroll");*/
             return true;
         }
         else{
@@ -485,32 +466,12 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     public void onLongPress(MotionEvent motionEvent) {
-        //prompt.setText("Long Press Achieved!");
-        //gestureName = "Long Press";
-        if(gameStarted == true  /*&& touches < performedGestureList.size()*/ /*&& roundProgress == 3*/){// activate gesture response if game is started and round has finished making progress
-            //id2 = 5;
-            //touches++;
+        if(gameStarted == true){// activate gesture response if game is started
             performedGestureName = "Long Press!";
-            storeUserGesture();
-            if (performedGestureList.size() > 1 && nextIndex < performedGestureList.size()){
-                if (performedGestureList.get(nextIndex) == performedGestureList.get(nextIndex - 1)){
-                    repeatMultInt++;
-                    repeatMultString.delete(0, repeatMultString.length());
-                    repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
-                }
-                else{
-                    repeatMultInt = 1;
-                    prompt.setText(performedGestureName);
-                }
-            }
-            else /*if (repeatMultInt == 1)*/ {
-                prompt.setText(performedGestureName);
-            }
-            nextIndex++;
+            performedGestureList.add(performedGestureName);
+           printPerformedGesture(performedGestureName);
             //changeColorScheme();
             Log.i(TAG, "Long Press");
-            //Log.i(TAG, "id2 = " + id2 + "\n");
         }
         else{
             // do nothing
@@ -520,32 +481,15 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        //prompt.setText("Fling Achieved!");
-        //gestureName = "Fling";
+
         if(gameStarted == true  /*&& touches < performedGestureList.size()*/ /*&& roundProgress == 3*/){// activate gesture response if game is started and round has finished making progress
             //id2 = 4;
             //touches++;
             performedGestureName = "Fling!";
-            storeUserGesture();
-            if (performedGestureList.size() > 1 && nextIndex < performedGestureList.size()){
-                if (performedGestureList.get(nextIndex) == performedGestureList.get(nextIndex - 1)){
-                    repeatMultInt++;
-                    repeatMultString.delete(0, repeatMultString.length());
-                    repeatMultString.trimToSize();
-                    prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
-                }
-                else{
-                    repeatMultInt = 1;
-                    prompt.setText(performedGestureName);
-                }
-            }
-            else /*if (repeatMultInt == 1)*/ {
-                prompt.setText(performedGestureName);
-            }
-            nextIndex++;
+            performedGestureList.add(performedGestureName);
+           printPerformedGesture(performedGestureName);
             //changeColorScheme();
             Log.i(TAG, "Fling");
-            //Log.i(TAG, "id2 = " + id2 + "\n");
 
             return true;
         }
@@ -633,6 +577,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     //Randomly demand gesture to be performed by player and check if demanded gesture is a repeat
     public int demandGesture() { // app demands random gesture to be performed by user
         int randNum = (random.nextInt(4) + 1);
+        //int randNum = 1;
 
         Log.i(TAG, "randNum = " + randNum);
 
@@ -749,10 +694,10 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         }
     }
 
-    // store user gestures in the order they are performed
-    public void storeUserGesture(){
+    /*// store user gestures in the order they are performed
+    public void storePerformedGesture(){
         performedGestureList.add(performedGestureName);
-    }
+    }*/
 
 
 
@@ -760,7 +705,7 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
     public void changeColorScheme(){
         selectBGColor();
         if(prevBGColor != "") {
-             checkForRepeatedBGColor();
+            checkForRepeatedBGColor();
         }
         switch (currentBGColor){
             case "Red":
@@ -837,9 +782,9 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     public void checkForRepeatedBGColor() {
         if (currentBGColor == prevBGColor) {
-                changeColorScheme();
-            }
+            changeColorScheme();
         }
+    }
 
     public void populateDemandedGestureList() {
         demandGesture(); //generate a gesture to be performed
@@ -850,9 +795,11 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
         //checkForRepeatedGestures();
         if (repeatMultInt == 1) { // If current gesture is not a repeat of the last one
             prompt.setText(demandedGestureList.get(index)); // print the gesture without a multiplier indicator
+            playAnimation(/*id */demandedGestureList.get(index)); // play the animation corresponding to the demanded gesture
         }
         else{ // If the current gesture is a repeat of the last one
             prompt.setText(demandedGestureList.get(index) + " " + repeatMultString.append("(" + repeatMultInt + ")")); // print the gesture with a multiplier indicator
+            playAnimation(/*id*/ demandedGestureList.get(index)); // play the animation corresponding to the demanded gesture
         }
 
         nextIndex++;
@@ -873,7 +820,6 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
             }
         };
         waitThread.start();
-
     }
 
     public void waitInBackground(Handler handler, long waitTime){
@@ -910,7 +856,75 @@ public class GameActivity extends Activity implements GestureDetector.OnGestureL
 
     }
 
+    public void loadAnimations(){
+        singleTapZoom = AnimationUtils.loadAnimation(this, R.anim.single_tap_scaling);
+        //singleTapZoom = new ScaleAnimation(1, 2, 1, 2, (prompt.getWidth()/2), (prompt.getHeight()/2));
+        //singleTapZoom.setDuration(500);
+
+        doubleTapZoom = AnimationUtils.loadAnimation(this, R.anim.double_tap_scaling);
+        //doubleTapZoom = new ScaleAnimation(1, 2, 1, 2, (prompt.getWidth()/2), (prompt.getHeight()/2));
+        //doubleTapZoom.setDuration(500);
+        doubleTapZoom.setRepeatCount(1);
+
+        longPressZoom = AnimationUtils.loadAnimation(this, R.anim.long_press_scaling);
+        //longPressZoom = new ScaleAnimation(1, 2, 1, 2, (prompt.getWidth()/2), (prompt.getHeight()/2));
+        //longPressZoom.setDuration(500);
+
+        flingTranslate = AnimationUtils.loadAnimation(this, R.anim.fling_translate);
+        //flingTranslate = new TranslateAnimation(0, 0, 500, 0);
+        //flingTranslate.setDuration(500);
+
+    }
+
+    public void printPerformedGesture(String performedGestureName){
+        if (performedGestureList.size() > 1 && nextIndex < performedGestureList.size()){
+            if (performedGestureList.get(nextIndex) == performedGestureList.get(nextIndex - 1)){
+                repeatMultInt++;
+                repeatMultString.delete(0, repeatMultString.length());
+                repeatMultString.trimToSize();
+                prompt.setText(performedGestureName + " " + repeatMultString.append("(" + repeatMultInt + ")"));
+                playAnimation(performedGestureName);
+            }
+            else{
+                repeatMultInt = 1;
+                prompt.setText(performedGestureName);
+                playAnimation(performedGestureName);
+            }
+        }
+        else{
+            prompt.setText(performedGestureName);
+            playAnimation(performedGestureName);
+        }
+        nextIndex++;
+    }
+
+    public void playAnimation(String string) {
+        switch (string) {
+
+            case "Double Tap!":
+                prompt.startAnimation(doubleTapZoom);
+                //prompt.setAnimation(singleTapZoom);
+                break;
+
+            case "Single Tap!":
+                prompt.startAnimation(singleTapZoom);
+                //prompt.setAnimation(doubleTapZoom);
+                break;
+
+            case "Fling!":
+                prompt.startAnimation(flingTranslate);
+                //prompt.setAnimation(longPressZoom);
+                break;
+
+            case "Long Press!":
+                prompt.startAnimation(longPressZoom);
+                //prompt.setAnimation(flingTranslate);
+                break;
+        }
+    }
+
 }
+
 
 
 
